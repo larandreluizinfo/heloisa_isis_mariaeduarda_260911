@@ -1,12 +1,310 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>heloisa_isis_mariaeduarda_260911</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#7c3aed">
+<title>Mímica na Testa — Heloisa, Isis e Maria Eduarda</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  :root {
+    --roxo: #7c3aed; --rosa: #ec4899; --amarelo: #facc15;
+    --verde: #22c55e; --azul: #3b82f6; --fundo: #1e1b4b;
+  }
+  body {
+    margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(160deg, #1e1b4b, #6d28d9 60%, #ec4899);
+    min-height: 100vh; color: #fff;
+    display: flex; justify-content: center; align-items: flex-start;
+    padding: 12px;
+  }
+  .app { width: 100%; max-width: 520px; padding-bottom: 32px; }
+  .card {
+    background: rgba(255,255,255,.96); color: #1e1b4b;
+    border-radius: 24px; padding: 22px 18px; margin-top: 12px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.35);
+  }
+  h1 { text-align: center; font-size: 1.7rem; margin: 14px 0 4px; text-shadow: 0 2px 10px rgba(0,0,0,.3); }
+  .sub { text-align: center; opacity: .9; margin: 0 0 6px; }
+  .tela { display: none; }
+  .tela.ativa { display: block; animation: entra .25s ease; }
+  @keyframes entra { from { transform: translateY(10px); opacity: 0; } to { transform: none; opacity: 1; } }
+  label { font-weight: 700; font-size: .9rem; display: block; margin: 12px 0 6px; }
+  input[type=text], select {
+    width: 100%; padding: 12px; border-radius: 14px; font-size: 1rem;
+    border: 2px solid #ddd6fe; outline: none;
+  }
+  input[type=text]:focus, select:focus { border-color: var(--roxo); }
+  .jogadoras { display: grid; gap: 8px; }
+  .grid-cat { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+  .cat {
+    border: 3px solid transparent; border-radius: 16px; padding: 14px 8px;
+    background: #f5f3ff; cursor: pointer; text-align: center; font-weight: 800;
+    transition: transform .08s;
+  }
+  .cat:active { transform: scale(.96); }
+  .cat .emoji { font-size: 2rem; display: block; }
+  .cat.selecionada { border-color: var(--roxo); background: #ede9fe; }
+  .tempo-opcoes { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tempo-opcoes button {
+    flex: 1; min-width: 64px; padding: 10px; border-radius: 12px;
+    border: 2px solid #ddd6fe; background: #fff; font-weight: 800; cursor: pointer;
+  }
+  .tempo-opcoes button.selecionado { background: var(--roxo); color: #fff; border-color: var(--roxo); }
+  .btn {
+    display: block; width: 100%; padding: 16px; margin-top: 14px;
+    border: none; border-radius: 16px; font-size: 1.15rem; font-weight: 900;
+    cursor: pointer; color: #fff; background: var(--roxo);
+    box-shadow: 0 6px 0 rgba(0,0,0,.2);
+  }
+  .btn:active { transform: translateY(3px); box-shadow: none; }
+  .btn.rosa { background: var(--rosa); }
+  .btn.verde { background: var(--verde); }
+  .btn.amarelo { background: #eab308; }
+  .btn.cinza { background: #64748b; }
+  .btn.borda { background: #fff; color: var(--roxo); border: 3px solid var(--roxo); box-shadow: none; }
+  .regras { background: #fef9c3; border-radius: 14px; padding: 12px 14px; font-size: .95rem; margin-top: 12px; }
+  .regras li { margin: 6px 0; }
+  /* Tela de jogo */
+  #tela-jogo .card { text-align: center; padding: 18px 14px; }
+  .topo-jogo { display: flex; justify-content: space-between; align-items: center; font-weight: 900; }
+  .pill { background: #ede9fe; padding: 6px 12px; border-radius: 999px; font-size: .9rem; }
+  #timer { font-size: 1.4rem; background: #1e1b4b; color: #fff; padding: 6px 16px; border-radius: 999px; }
+  #timer.urgente { background: #dc2626; animation: pisca .5s infinite alternate; }
+  @keyframes pisca { to { transform: scale(1.1); } }
+  #palavra {
+    font-size: clamp(2.2rem, 10vw, 3.4rem); font-weight: 900; margin: 26px 0 6px;
+    line-height: 1.1; min-height: 3.2em; display: flex; align-items: center; justify-content: center;
+  }
+  #categoria-atual { opacity: .6; font-weight: 700; }
+  #placar-rodada { font-size: 1.1rem; font-weight: 800; margin: 8px 0; }
+  .botoes-jogo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+  .botoes-jogo button { padding: 22px 8px; font-size: 1.2rem; font-weight: 900; border: none; border-radius: 18px; cursor: pointer; color: #fff; }
+  #btn-pulou { background: #f59e0b; box-shadow: 0 6px 0 #92400e; }
+  #btn-acertou { background: var(--verde); box-shadow: 0 6px 0 #14532d; }
+  .botoes-jogo button:active { transform: translateY(3px); box-shadow: none; }
+  .placar-geral { display: grid; gap: 8px; margin-top: 12px; }
+  .linha-placar { display: flex; justify-content: space-between; background: #f5f3ff; padding: 10px 14px; border-radius: 12px; font-weight: 800; }
+  .linha-placar.vez { background: #ede9fe; border: 2px solid var(--roxo); }
+  .lista-palavras { text-align: left; margin-top: 10px; max-height: 220px; overflow: auto; }
+  .lista-palavras div { padding: 8px 10px; border-radius: 10px; margin: 4px 0; font-weight: 700; }
+  .ok { background: #dcfce7; } .pulo { background: #fef3c7; }
+  .countdown-num { font-size: 5rem; font-weight: 900; text-align: center; margin: 30px 0; }
+  .dica-testa { text-align: center; background: rgba(255,255,255,.2); border-radius: 14px; padding: 10px; margin-top: 10px; font-weight: 700; }
+  footer { text-align: center; opacity: .7; font-size: .8rem; margin-top: 16px; color: #fff; }
+</style>
 </head>
 <body>
-  <h1>Projeto de Heloisa, Isis e Maria Eduarda</h1>
-  <p>Este site está no ar via GitHub Pages.</p>
+<div class="app">
+  <h1>🤳 Mímica na Testa</h1>
+  <p class="sub">Heloisa • Isis • Maria Eduarda</p>
+
+  <!-- TELA 1: INÍCIO -->
+  <div id="tela-inicio" class="tela ativa">
+    <div class="card">
+      <label>Jogadoras (cada uma no seu aparelho 📱):</label>
+      <div class="jogadoras">
+        <input type="text" id="nome0" value="Heloisa" maxlength="15">
+        <input type="text" id="nome1" value="Isis" maxlength="15">
+        <input type="text" id="nome2" value="Maria Eduarda" maxlength="15">
+      </div>
+
+      <label>Escolha a categoria:</label>
+      <div class="grid-cat" id="grid-cat"></div>
+
+      <label>Tempo por rodada:</label>
+      <div class="tempo-opcoes" id="tempo-opcoes">
+        <button data-t="30">30s</button>
+        <button data-t="60" class="selecionado">60s</button>
+        <button data-t="90">90s</button>
+        <button data-t="120">120s</button>
+      </div>
+
+      <div class="regras">
+        <b>📜 Regras do jogo:</b>
+        <ol style="margin:6px 0 0; padding-left:20px">
+          <li>Cada pessoa joga com <b>seu próprio aparelho</b>.</li>
+          <li>Coloque o celular <b>na testa</b> com a palavra virada para as amigas.</li>
+          <li>As amigas dão <b>dicas</b> (podem falar e fazer gestos).</li>
+          <li>🚫 <b>Não pode</b> falar a palavra ou o que a pessoa é (não diga a resposta!).</li>
+          <li>🚫 <b>Não pode fazer sons</b> imitando (ex: não pode latir, miar, roncar...).</li>
+          <li>Quem está com o celular tenta <b>adivinhar</b>. Acertou = ponto! Fale a resposta em voz alta.</li>
+        </ol>
+      </div>
+
+      <button class="btn rosa" onclick="comecarJogo()">▶ Começar o jogo</button>
+    </div>
+    <div class="dica-testa">💡 Cada uma abre este mesmo site no seu celular e joga na sua vez!</div>
+  </div>
+
+  <!-- TELA 2: VEZ DE QUEM -->
+  <div id="tela-vez" class="tela">
+    <div class="card" style="text-align:center">
+      <h2 style="margin:0">🎯 Vez de <span id="vez-nome"></span></h2>
+      <p>Categoria: <b id="vez-cat"></b></p>
+      <div class="placar-geral" id="placar-vez"></div>
+      <button class="btn" onclick="iniciarContagem()">📱 Colocar na testa e começar</button>
+      <button class="btn borda" onclick="mostrarTela('tela-inicio')">⚙️ Trocar categoria / nomes</button>
+    </div>
+  </div>
+
+  <!-- TELA 3: CONTAGEM -->
+  <div id="tela-contagem" class="tela">
+    <div class="card">
+      <h2 style="text-align:center;margin:0">Coloque o celular na testa! 🤳</h2>
+      <div class="countdown-num" id="count-num">3</div>
+      <p style="text-align:center">As amigas vão dar as dicas...</p>
+    </div>
+  </div>
+
+  <!-- TELA 4: JOGO -->
+  <div id="tela-jogo" class="tela">
+    <div class="card">
+      <div class="topo-jogo">
+        <span class="pill" id="jogador-atual">—</span>
+        <span id="timer">60</span>
+        <span class="pill" id="pontos-rodada">✅ 0</span>
+      </div>
+      <div id="palavra">—</div>
+      <div id="categoria-atual">—</div>
+      <div id="placar-rodada"></div>
+      <div class="botoes-jogo">
+        <button id="btn-pulou" onclick="pular()">⏭<br>PULOU</button>
+        <button id="btn-acertou" onclick="acertar()">✅<br>ACERTOU!</button>
+      </div>
+      <p style="font-size:.85rem;opacity:.6">Os botões são apertados pelas amigas que estão dando as dicas.</p>
+      <button class="btn cinza" onclick="encerrarRodada(true)">⏹ Encerrar rodada</button>
+    </div>
+  </div>
+
+  <!-- TELA 5: RESULTADO -->
+  <div id="tela-fim" class="tela">
+    <div class="card" style="text-align:center">
+      <h2 style="margin:0">🎉 <span id="fim-nome"></span> fez <span id="fim-pontos"></span> pontos!</h2>
+      <div class="lista-palavras" id="lista-resultado"></div>
+      <div class="placar-geral" id="placar-fim"></div>
+      <button class="btn verde" onclick="proximaVez()">➡ Próxima jogadora</button>
+      <button class="btn borda" onclick="mostrarTela('tela-inicio')">🏠 Voltar ao início</button>
+    </div>
+  </div>
+
+  <footer>Feito com 💜 por Heloisa, Isis e Maria Eduarda</footer>
+</div>
+
+<script>
+const BANCO = {
+  "🐶 Animais": ["Cachorro","Gato","Elefante","Leão","Tigre","Macaco","Girafa","Zebra","Cavalo","Vaca","Porco","Galinha","Pato","Coelho","Urso","Panda","Canguru","Jacaré","Cobra","Sapo","Tubarão","Baleia","Golfinho","Polvo","Borboleta","Abelha","Formiga","Aranha","Coruja","Papagaio","Pinguim","Dinossauro","Camelo","Hipopótamo","Rinoceronte","Lobo","Raposa","Veado","Morcego","Caracol"],
+  "📦 Objetos": ["Escova de dentes","Guarda-chuva","Tesoura","Espelho","Controle remoto","Celular","Fone de ouvido","Mochila","Óculos de sol","Chapéu","Guardanapo","Vela","Lanterna","Chave","Cadeira","Travesseiro","Cobertor","Ventilador","Panela","Frigideira","Copo","Garrafa","Escada","Bola","Boneca","Violão","Bateria","Trompete","Livro","Lápis","Borracha","Mala","Relógio","Anel","Colar","Perfume","Sabonete","Toalha","Shampoo","Sofá"],
+  "🍔 Comidas": ["Pizza","Hambúrguer","Lasanha","Feijoada","Coxinha","Pastel","Pipoca","Hot-dog","Batata frita","Macarrão","Arroz e feijão","Tapioca","Pão de queijo","Acarajé","Sushi","Temaki","Strogonoff","Churrasco","Farofa","Salgadinho","Milho","Mandioca","Cuscuz","Omelete","Torta","Esfiha","Quibe","Empada","Panqueca","Nhoque"],
+  "🍰 Sobremesas": ["Brigadeiro","Beijinho","Bolo de chocolate","Sorvete","Pudim","Mousse de maracujá","Torta de limão","Cheesecake","Brownie","Cookie","Donut","Churros","Açaí","Milkshake","Picolé","Gelatina","Pavê","Tiramisu","Cupcake","Paçoca","Pé de moleque","Quindim","Cocada","Doce de leite","Palha italiana","Bolo de cenoura","Petit gâteau","Banana split","Crepe de Nutella","Fondue de chocolate"],
+  "🏷️ Marcas": ["Nike","Adidas","Coca-Cola","McDonald's","Apple","Samsung","Lego","Barbie","Hot Wheels","Netflix","Disney","YouTube","TikTok","Instagram","WhatsApp","Nubank","Havaianas","O Boticário","Nestlé","Lacta","Garoto","Fini","Trident","Halls","Seda","Pantene","Colgate","Shein","Shopee","Mercado Livre"],
+  "👩‍⚕️ Profissões": ["Médica","Dentista","Professora","Bombeira","Policial","Cozinheira","Cabeleireira","Cantora","Atriz","Jogadora de futebol","Fotógrafa","Enfermeira","Veterinária","Advogada","Engenheira","Motorista","Piloto de avião","Astronauta","Palhaça","Mágica","Dançarina","Modelo","Jornalista","Padeira","Costureira","Pintora","Escritora","Babá","Manicure","Juíza"],
+  "⚽ Esportes": ["Futebol","Vôlei","Basquete","Tênis","Natação","Surfe","Skate","Judô","Karatê","Boxe","Corrida","Ciclismo","Ginástica","Ballet","Hipismo","Handebol","Futsal","Beach tênis","Slackline","Patinação","Golfe","Rugby","Baseball","Tênis de mesa","Badminton","Escalada","Mergulho","Canoagem","Atletismo","Capoeira"],
+  "🎭 Misto (tudo)": []
+};
+BANCO["🎭 Misto (tudo)"] = Object.keys(BANCO).filter(k => !k.includes("Misto")).flatMap(k => BANCO[k]);
+
+let estado = { nomes: ["Heloisa","Isis","Maria Eduarda"], categoria: "🐶 Animais", tempo: 60, vez: 0, pontos: [0,0,0], baralho: [], acertos: [], pulos: [], segundos: 60, intervalo: null };
+
+// monta categorias
+const grid = document.getElementById("grid-cat");
+Object.keys(BANCO).forEach(cat => {
+  const d = document.createElement("div");
+  d.className = "cat" + (cat === estado.categoria ? " selecionada" : "");
+  const [emoji, ...resto] = cat.split(" ");
+  d.innerHTML = `<span class="emoji">${emoji}</span>${resto.join(" ")}<br><small>${BANCO[cat].length} palavras</small>`;
+  d.onclick = () => { estado.categoria = cat; document.querySelectorAll(".cat").forEach(e => e.classList.remove("selecionada")); d.classList.add("selecionada"); };
+  grid.appendChild(d);
+});
+document.querySelectorAll("#tempo-opcoes button").forEach(b => {
+  b.onclick = () => { document.querySelectorAll("#tempo-opcoes button").forEach(x => x.classList.remove("selecionado")); b.classList.add("selecionado"); estado.tempo = parseInt(b.dataset.t); };
+});
+
+function lerNomes() {
+  estado.nomes = [0,1,2].map(i => document.getElementById("nome"+i).value.trim() || ("Jogadora " + (i+1)));
+}
+function mostrarTela(id) {
+  document.querySelectorAll(".tela").forEach(t => t.classList.remove("ativa"));
+  document.getElementById(id).classList.add("ativa");
+  window.scrollTo(0,0);
+}
+function embaralhar(a) { for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+function comecarJogo() {
+  lerNomes();
+  estado.vez = 0; estado.pontos = [0,0,0];
+  mostrarVez();
+}
+function mostrarVez() {
+  document.getElementById("vez-nome").textContent = estado.nomes[estado.vez];
+  document.getElementById("vez-cat").textContent = estado.categoria;
+  document.getElementById("placar-vez").innerHTML = estado.nomes.map((n,i) =>
+    `<div class="linha-placar${i===estado.vez?' vez':''}"><span>${i===estado.vez?'👉 ':''}${n}</span><span>${estado.pontos[i]} pts</span></div>`).join("");
+  mostrarTela("tela-vez");
+}
+function iniciarContagem() {
+  mostrarTela("tela-contagem");
+  let n = 3;
+  const el = document.getElementById("count-num");
+  el.textContent = n;
+  const iv = setInterval(() => {
+    n--;
+    if (n <= 0) { clearInterval(iv); iniciarRodada(); }
+    else { el.textContent = n; if (navigator.vibrate) navigator.vibrate(100); }
+  }, 800);
+  // trava a tela ligada se possível
+  if (navigator.wakeLock) navigator.wakeLock.request("screen").catch(()=>{});
+}
+function iniciarRodada() {
+  estado.baralho = embaralhar([...BANCO[estado.categoria]]);
+  estado.acertos = []; estado.pulos = [];
+  estado.segundos = estado.tempo;
+  document.getElementById("jogador-atual").textContent = "🤳 " + estado.nomes[estado.vez];
+  document.getElementById("categoria-atual").textContent = estado.categoria;
+  mostrarTela("tela-jogo");
+  proximaPalavra();
+  atualizarTimer();
+  clearInterval(estado.intervalo);
+  estado.intervalo = setInterval(() => {
+    estado.segundos--;
+    atualizarTimer();
+    if (estado.segundos <= 0) encerrarRodada(false);
+  }, 1000);
+}
+function atualizarTimer() {
+  const t = document.getElementById("timer");
+  t.textContent = estado.segundos + "s";
+  t.classList.toggle("urgente", estado.segundos <= 10);
+  document.getElementById("pontos-rodada").textContent = "✅ " + estado.acertos.length;
+  document.getElementById("placar-rodada").textContent =
+    `Acertos: ${estado.acertos.length} • Pulos: ${estado.pulos.length}`;
+}
+function proximaPalavra() {
+  if (estado.baralho.length === 0) estado.baralho = embaralhar([...BANCO[estado.categoria]]);
+  document.getElementById("palavra").textContent = estado.baralho.pop();
+  if (navigator.vibrate) navigator.vibrate(30);
+}
+function acertar() { estado.acertos.push(document.getElementById("palavra").textContent); proximaPalavra(); atualizarTimer(); }
+function pular() { estado.pulos.push(document.getElementById("palavra").textContent); proximaPalavra(); atualizarTimer(); }
+function encerrarRodada(manual) {
+  clearInterval(estado.intervalo);
+  estado.pontos[estado.vez] += estado.acertos.length;
+  document.getElementById("fim-nome").textContent = estado.nomes[estado.vez];
+  document.getElementById("fim-pontos").textContent = estado.acertos.length;
+  document.getElementById("lista-resultado").innerHTML =
+    estado.acertos.map(p => `<div class="ok">✅ ${p}</div>`).join("") +
+    estado.pulos.map(p => `<div class="pulo">⏭ ${p} (pulada)</div>`).join("") +
+    (estado.acertos.length === 0 ? "<p>Nenhum acerto dessa vez — na próxima vai! 💪</p>" : "");
+  const ordem = estado.nomes.map((n,i) => ({n, p: estado.pontos[i]})).sort((a,b) => b.p - a.p);
+  document.getElementById("placar-fim").innerHTML = "<b>🏆 Placar geral:</b>" +
+    ordem.map((o,idx) => `<div class="linha-placar"><span>${idx===0?'🥇 ':''}${o.n}</span><span>${o.p} pts</span></div>`).join("");
+  if (navigator.vibrate) navigator.vibrate([200,100,200]);
+  mostrarTela("tela-fim");
+}
+function proximaVez() {
+  estado.vez = (estado.vez + 1) % estado.nomes.length;
+  mostrarVez();
+}
+</script>
 </body>
 </html>
