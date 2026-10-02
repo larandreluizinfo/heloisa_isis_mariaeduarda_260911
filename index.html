@@ -1,78 +1,366 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Projeto de Heloisa, Isis e Maria Eduarda</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #333; background: #f4f6fb; }
-    header { background: linear-gradient(135deg, #4a6fa5, #6b8cce); color: white; padding: 2.5rem 1rem; text-align: center; }
-    header h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
-    header p { opacity: 0.9; }
-    nav { background: #33415c; padding: 0.7rem; text-align: center; }
-    nav a { color: white; text-decoration: none; margin: 0 1rem; font-weight: bold; }
-    nav a:hover { text-decoration: underline; }
-    main { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
-    section { background: white; border-radius: 10px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    section h2 { color: #4a6fa5; margin-bottom: 0.8rem; }
-    .grupo { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
-    .card { background: #eef2fa; border-radius: 8px; padding: 1rem; text-align: center; }
-    .card strong { display: block; font-size: 1.1rem; color: #33415c; }
-    footer { text-align: center; padding: 1.5rem; color: #666; font-size: 0.9rem; }
-    @media (max-width: 600px) { header h1 { font-size: 1.4rem; } }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💄 Quiz da Maquiagem — Heloisa, Isis e Maria Eduarda</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(180deg,#fff0f6,#ffe4ee 40%,#f3e8ff);min-height:100vh;color:#4a2b3a}
+header{background:linear-gradient(135deg,#ec4899,#a855f7,#f59e0b);color:#fff;padding:1.6rem 1rem;text-align:center;box-shadow:0 4px 20px rgba(236,72,153,.35)}
+header h1{font-size:1.6rem}
+header p{opacity:.95;font-size:.95rem}
+.badge{display:inline-block;background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.5);padding:.2rem .8rem;border-radius:999px;margin:.3rem .2rem;font-size:.85rem;font-weight:bold}
+main{max-width:920px;margin:1.2rem auto;padding:0 .9rem 3rem}
+.card{background:#fff;border-radius:18px;padding:1.4rem;margin-bottom:1.1rem;box-shadow:0 8px 25px rgba(168,85,247,.12);border:2px solid #fce7f3}
+.card h2{color:#db2777;margin-bottom:.6rem}
+label{font-weight:bold;display:block;margin:.7rem 0 .3rem;color:#9d174d}
+input[type=text],select{width:100%;padding:.8rem;border-radius:12px;border:2px solid #f9a8d4;font-size:1rem;background:#fff7fb}
+input:focus,select:focus{outline:none;border-color:#ec4899}
+.turmas{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-top:.5rem}
+.turma-btn{border:2px solid #f9a8d4;background:#fff;border-radius:14px;padding:.7rem .3rem;font-weight:bold;cursor:pointer;font-size:1rem;transition:.15s}
+.turma-btn.selecionado{background:linear-gradient(135deg,#ec4899,#a855f7);color:#fff;border-color:#ec4899;transform:scale(1.04)}
+.difs{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin-top:.5rem}
+.dif{border:none;border-radius:14px;padding:.9rem;cursor:pointer;font-weight:bold;color:#fff;font-size:1rem}
+.dif.selecionado{outline:4px solid #4a2b3a;transform:scale(1.03)}
+.dif-facil{background:linear-gradient(135deg,#22c55e,#16a34a)}
+.dif-medio{background:linear-gradient(135deg,#3b82f6,#1d4ed8)}
+.dif-dificil{background:linear-gradient(135deg,#f59e0b,#dc2626)}
+.dif-hard{background:linear-gradient(135deg,#111827,#dc2626)}
+.btn{width:100%;margin-top:1rem;border:none;border-radius:14px;padding:1rem;font-size:1.15rem;font-weight:bold;cursor:pointer;color:#fff;background:linear-gradient(135deg,#ec4899,#a855f7);box-shadow:0 6px 18px rgba(236,72,153,.4)}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.5}
+.btn-sec{background:#fff;color:#db2777;border:2px solid #ec4899;box-shadow:none;margin-top:.6rem}
+.info-bar{display:flex;flex-wrap:wrap;gap:.5rem;margin:.8rem 0}
+.pill{background:#fce7f3;border:1px solid #f9a8d4;border-radius:999px;padding:.3rem .8rem;font-size:.88rem;font-weight:bold}
+#mapa{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:.5rem;margin-top:1rem;max-height:420px;overflow:auto;padding:.4rem;background:#fff7fb;border-radius:12px;border:2px dashed #f9a8d4}
+.fase{aspect-ratio:1;border-radius:12px;border:2px solid #f9a8d4;background:#fff;font-weight:bold;cursor:pointer;font-size:.9rem;position:relative}
+.fase small{display:block;font-size:.65rem}
+.fase.livre:hover{border-color:#ec4899;transform:scale(1.06)}
+.fase.bloq{opacity:.35;cursor:not-allowed;background:#eee}
+.fase.feita{background:linear-gradient(135deg,#fdf2f8,#fce7f3);border-color:#22c55e}
+.fase.atual{outline:3px solid #a855f7;animation:pisca 1s infinite alternate}
+@keyframes pisca{from{box-shadow:0 0 0 #a855f7}to{box-shadow:0 0 14px #a855f7}}
+#timerWrap{background:#ffe4ee;border-radius:999px;height:16px;overflow:hidden;margin:.6rem 0}
+#timerBar{height:100%;width:100%;background:linear-gradient(90deg,#22c55e,#eab308,#ef4444);transition:width .3s linear}
+.alt{display:block;width:100%;text-align:left;margin:.5rem 0;padding:.9rem;border-radius:14px;border:2px solid #f3d0e0;background:#fff7fb;cursor:pointer;font-size:1rem;font-weight:600}
+.alt:hover{border-color:#ec4899;background:#fce7f3}
+.alt.certa{background:#dcfce7;border-color:#22c55e}
+.alt.errada{background:#fee2e2;border-color:#ef4444}
+.dica{background:#fffbeb;border:2px dashed #f59e0b;border-radius:12px;padding:.7rem;margin:.6rem 0;font-size:.92rem}
+.curio{background:#f0fdf4;border:2px solid #86efac;border-radius:12px;padding:.7rem;margin-top:.7rem}
+.escondido{display:none!important}
+footer{text-align:center;padding:1.2rem;color:#9d174d;font-size:.9rem}
+.topo-jogo{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.4rem}
+.progresso{font-weight:bold;color:#7c3aed}
+@media(max-width:600px){.turmas{grid-template-columns:repeat(2,1fr)}header h1{font-size:1.25rem}}
+</style>
 </head>
 <body>
-  <header>
-    <h1>Projeto de Heloisa, Isis e Maria Eduarda</h1>
-    <p>Trabalho escolar — site publicado via GitHub Pages</p>
-  </header>
+<header>
+<h1>💄 Quiz da Maquiagem 💋</h1>
+<p>Da fase 1 até a fase 200 — Lojas & Marcas famosas!</p>
+<div>
+<span class="badge">🌸 Dior</span><span class="badge">🛍️ Sephora</span><span class="badge">💖 Niina Secrets</span><span class="badge">🍓 Melu</span><span class="badge">✨ Bruna Tavares</span><span class="badge">👑 Mari Maria</span><span class="badge">🌟 Franciny Glow</span><span class="badge">💄 MAC</span><span class="badge">👄 Boca Rosa</span><span class="badge">🐝 Quem disse, Berenice?</span><span class="badge">💜 Make B.</span><span class="badge">🌊 Océane</span><span class="badge">☁️ Rare Beauty</span>
+</div>
+<p style="margin-top:.5rem">Feito por <b>Heloisa, Isis e Maria Eduarda</b> 💕</p>
+</header>
 
-  <nav>
-    <a href="#sobre">Sobre</a>
-    <a href="#trabalho">Nosso Trabalho</a>
-    <a href="#grupo">Grupo</a>
-    <a href="#contato">Contato</a>
-  </nav>
+<main>
+<!-- TELA 1: CADASTRO -->
+<section class="card" id="tela-inicio">
+<h2>🎮 1º Passo: quem vai jogar?</h2>
+<label for="nome">Seu nome:</label>
+<input type="text" id="nome" placeholder="Ex: Heloisa" maxlength="20">
+<label>Sua turma:</label>
+<div class="turmas" id="turmas">
+<button class="turma-btn" data-turma="6º ano">📚 6º ano</button>
+<button class="turma-btn" data-turma="7º ano">📚 7º ano</button>
+<button class="turma-btn" data-turma="8º ano">📚 8º ano</button>
+<button class="turma-btn" data-turma="9º ano">🎓 9º ano</button>
+</div>
+<label>Qual fase você quer fazer? (dificuldade):</label>
+<div class="difs" id="difs">
+<button class="dif dif-facil" data-dif="facil">😊 FÁCIL<br><small>30s • dica liberada</small></button>
+<button class="dif dif-medio" data-dif="medio">🧐 MÉDIO<br><small>20s • pontos x2</small></button>
+<button class="dif dif-dificil" data-dif="dificil">😱 DIFÍCIL<br><small>15s • pontos x3</small></button>
+<button class="dif dif-hard" data-dif="hard">🔥 HARD<br><small>10s • pontos x5 • sem dica</small></button>
+</div>
+<div class="info-bar">
+<span class="pill" id="resumo">Escolha turma + dificuldade</span>
+</div>
+<button class="btn" id="btnComecar" disabled>Começar o jogo ➜</button>
+<p style="margin-top:.6rem;font-size:.85rem;color:#888">💾 Seu progresso fica salvo no celular/computador. Pode fechar e continuar depois!</p>
+</section>
 
-  <main>
-    <section id="sobre">
-      <h2>Sobre o projeto</h2>
-      <p>Este site foi criado como parte do trabalho escolar de Heloisa, Isis e Maria Eduarda. Aqui vamos apresentar o tema escolhido, os objetivos do trabalho e os principais aprendizados.</p>
-      <p><em>Próximo passo:</em> me digam qual é o tema exato (ex: Meio Ambiente, História do Brasil, Ciências, Literatura) que eu já coloco o texto pronto aqui.</p>
-    </section>
+<!-- TELA 2: MAPA DE FASES -->
+<section class="card escondido" id="tela-mapa">
+<div class="topo-jogo">
+<h2>🗺️ Mapa das fases</h2>
+<button class="btn-sec btn" style="width:auto;padding:.5rem 1rem" id="btnTrocar">👤 trocar jogador</button>
+</div>
+<div class="info-bar">
+<span class="pill" id="jogadorInfo"></span>
+<span class="pill" id="pontosInfo">⭐ 0 pontos</span>
+<span class="pill" id="faseInfo"></span>
+</div>
+<p style="font-size:.9rem">💄 <b>Rosa claro</b> = já passou &nbsp; 💜 <b>piscando</b> = sua fase atual &nbsp; 🔒 = bloqueada<br>
+🎲 Tipos de fase: 🛍️ Lojas • ✨ Gringa Luxo • 🌸 Marca Brasileira • 💋 Boca & Olhos • 🧴 Skincare/Base</p>
+<div id="mapa"></div>
+<button class="btn btn-sec" id="btnZerar">🔄 recomeçar do zero</button>
+</section>
 
-    <section id="trabalho">
-      <h2>Nosso Trabalho</h2>
-      <h3>1. Introdução</h3>
-      <p>Escreva aqui a introdução do tema: por que ele é importante e o que será abordado.</p>
-      <h3>2. Desenvolvimento</h3>
-      <p>Escreva aqui os tópicos principais, dados da pesquisa e curiosidades.</p>
-      <h3>3. Conclusão</h3>
-      <p>Escreva aqui o que o grupo aprendeu e a conclusão do trabalho.</p>
-    </section>
+<!-- TELA 3: JOGO -->
+<section class="card escondido" id="tela-jogo">
+<div class="topo-jogo">
+<span class="progresso" id="faseTitulo">Fase 1</span>
+<span class="pill" id="catTitulo"></span>
+<button class="btn-sec btn" style="width:auto;padding:.4rem .9rem" id="btnMapa">🗺️ mapa</button>
+</div>
+<div id="timerWrap"><div id="timerBar"></div></div>
+<p id="tempoTxt" style="font-weight:bold"></p>
+<h2 id="pergunta" style="font-size:1.15rem;margin:.6rem 0"></h2>
+<div class="dica" id="dica"></div>
+<div id="alternativas"></div>
+<div class="curio escondido" id="curio"></div>
+<button class="btn escondido" id="btnProx">Próxima fase ➜</button>
+</section>
 
-    <section id="grupo">
-      <h2>Quem somos</h2>
-      <div class="grupo">
-        <div class="card"><strong>Heloisa</strong><span>Pesquisa e conteúdo</span></div>
-        <div class="card"><strong>Isis</strong><span>Apresentação e design</span></div>
-        <div class="card"><strong>Maria Eduarda</strong><span>Organização e revisão</span></div>
-      </div>
-      <p style="margin-top:1rem;font-size:0.9rem;color:#666;">Me falem se quiserem trocar as funções ou adicionar foto e turma de cada uma.</p>
-    </section>
+<!-- TELA 4: FINAL -->
+<section class="card escondido" id="tela-final">
+<h2>🏆 Parabéns!</h2>
+<p id="finalTxt" style="font-size:1.05rem"></p>
+<div class="info-bar"><span class="pill" id="finalPontos"></span></div>
+<button class="btn" id="btnJogarDeNovo">🔁 jogar de novo</button>
+<button class="btn btn-sec" id="btnVerMapa">🗺️ ver mapa</button>
+</section>
 
-    <section id="contato">
-      <h2>Contato / Escola</h2>
-      <p>Escola: ___________________</p>
-      <p>Turma: ___________________</p>
-      <p>Professora(or): ___________________</p>
-    </section>
-  </main>
+<section class="card">
+<h2>📖 Como jogar</h2>
+<p>1️⃣ Digite seu nome, escolha sua turma do <b>6º ao 9º ano</b> e a dificuldade (<b>fácil, médio, difícil ou hard</b>).<br>
+2️⃣ Comece na <b>fase 1</b> e vá desbloqueando até a <b>fase 200</b>.<br>
+3️⃣ Cada fase é 1 pergunta sobre: <b>Dior, Sephora, Niina Secrets, Melu, Bruna Tavares, Mari Maria, Franciny Ehlke/Glow, MAC, Boca Rosa, Quem disse Berenice?, Make B., Océane e Rare Beauty</b>.<br>
+4️⃣ Acertou = desbloqueia a próxima + ganha pontos. Errou ou acabou o tempo = tenta de novo!</p>
+</section>
+</main>
+<footer>Feito com 💖 por Heloisa, Isis e Maria Eduarda — 2026 • Trabalho escolar</footer>
 
-  <footer>
-    <p>Feito por Heloisa, Isis e Maria Eduarda — 2026</p>
-  </footer>
+<script>
+// ============ CONFIG ============
+const DIFS = {
+  facil:{nome:"FÁCIL 😊",tempo:30,multi:1,dica:true},
+  medio:{nome:"MÉDIO 🧐",tempo:20,multi:2,dica:true},
+  dificil:{nome:"DIFÍCIL 😱",tempo:15,multi:3,dica:true},
+  hard:{nome:"HARD 🔥",tempo:10,multi:5,dica:false}
+};
+let nome="", turma="", dif="";
+
+// ============ BANCO DE PERGUNTAS (base real sobre as marcas) ============
+const BANCO = [
+{c:"🛍️ Lojas",p:"O que é a Sephora?",o:["Uma loja de maquiagens e perfumes","Uma padaria francesa","Uma marca de sapatos","Um salão de cabelo"],c_:0,d:"💡 Dica: começa com S e vende de tudo de beleza!",x:"A Sephora é uma loja famosa do mundo todo que vende Dior, Rare Beauty, MAC e muito mais!"},
+{c:"✨ Gringa Luxo",p:"A Dior é uma marca de qual país?",o:["França","Japão","Brasil","México"],c_:0,d:"💡 Dica: Torre Eiffel…",x:"A Dior é francesa e super luxuosa. O perfume Miss Dior é um dos mais famosos!"},
+{c:"✨ Gringa Luxo",p:"Quem é a dona da Rare Beauty?",o:["Selena Gomez","Ariana Grande","Taylor Swift","Demi Lovato"],c_:0,d:"💡 Dica: ela é cantora e atriz da Disney!",x:"Rare Beauty foi criada pela Selena Gomez com a ideia de realçar a beleza natural."},
+{c:"✨ Gringa Luxo",p:"Qual é o batom mais famoso da MAC?",o:["Ruby Woo","Batom de morango","Batom azul","Batom verde"],c_:0,d:"💡 Dica: é vermelhão!",x:"O Ruby Woo da MAC é um vermelho clássico que combina com todo mundo!"},
+{c:"🌸 Marca Brasileira",p:"Quem é a dona da Boca Rosa Beauty?",o:["Bianca Andrade (Boca Rosa)","Anitta","Virgínia","Larissa Manoela"],c_:0,d:"💡 Dica: o apelido dela já diz!",x:"Bianca Andrade, a Boca Rosa, criou sua marca vendida com a Payot."},
+{c:"🌸 Marca Brasileira",p:"A linha Niina Secrets é de qual marca?",o:["Eudora","Avon","Natura","Jequiti"],c_:0,d:"💡 Dica: começa com E…",x:"Niina Secrets (Marina Niina) tem linha com a Eudora: base, lip tint e paletas!"},
+{c:"🌸 Marca Brasileira",p:"Bruna Tavares ficou famosa por qual produto?",o:["Batom líquido BT Velvet","Shampoo de cavalo","Sabonete","Esmalte neon"],c_:0,d:"💡 Dica: vai na boca e é veludo!",x:"O BT Velvet da Bruna Tavares (agora BT) é um batom líquido queridinho!"},
+{c:"🌸 Marca Brasileira",p:"Quem é a dona da Mari Maria Makeup?",o:["Mari Maria (Mariana Maria)","Mariana Ruy Barbosa","Maria Clara","Maria Joaquina"],c_:0,d:"💡 Dica: o nome está na pergunta!",x:"Mari Maria é influenciadora e sua base é famosa por cobrir bem!"},
+{c:"🌸 Marca Brasileira",p:"Franciny Ehlke é dona de qual linha?",o:["Franciny Ehlke Glow","Linha de carros","Linha de pipoca","Linha de sapatos"],c_:0,d:"💡 Dica: Glow = brilho!",x:"A Fran tem base, iluminador e o famoso Glow que deixa a pele radiante!"},
+{c:"🌸 Marca Brasileira",p:"A Melu é uma linha de qual marca?",o:["Ruby Rose","Dior","MAC","Chanel"],c_:0,d:"💡 Dica: começa com Ruby…",x:"Melu by Ruby Rose é baratinha e faz sucesso com blush, gloss e sombras coloridas!"},
+{c:"🛍️ Lojas",p:"Quem Disse, Berenice? pertence a qual grupo?",o:["Grupo Boticário","Grupo Silvio Santos","Grupo Globo","Grupo Lojas Americanas"],c_:0,d:"💡 Dica: vende o Boticário!",x:"Quem Disse, Berenice? é do mesmo grupo de O Boticário e tem lojas divertidas!"},
+{c:"🛍️ Lojas",p:"Make B. é uma linha de qual marca?",o:["O Boticário","A Natura","A Eudora","A Avon"],c_:0,d:"💡 Dica: começa com Boti…",x:"Make B. é a linha premium de maquiagem de O Boticário!"},
+{c:"🌊 Océane",p:"A Océane Femme é famosa por vender o quê?",o:["Algodão, lenços e acessórios de beleza","Pneus","Cimento","Ração"],c_:0,d:"💡 Dica: limpa maquiagem!",x:"Océane vende discos de algodão, pincéis fofos e necessaires!"},
+{c:"💋 Boca & Olhos",p:"O que é lip tint da Niina Secrets?",o:["Um batom líquido que deixa a boca rosadinha","Um suco de morango","Um perfume","Um esmalte"],c_:0,d:"💡 Dica: lip = lábio!",x:"Lip tint dá cor natural e dura muito nos lábios e bochechas!"},
+{c:"🧴 Skincare/Base",p:"Para que serve a base?",o:["Deixar o tom da pele uniforme","Escovar os dentes","Pintar o cabelo","Passar no pé"],c_:0,d:"💡 Dica: vai no rosto primeiro!",x:"Base uniformiza a pele. Mari Maria, Bruna Tavares e Fran têm bases famosas!"},
+{c:"💋 Boca & Olhos",p:"Para que serve o rímel (máscara de cílios)?",o:["Deixar os cílios grandes e volumosos","Pintar as unhas","Limpar o rosto","Hidratar o cabelo"],c_:0,d:"💡 Dica: vai nos olhos!",x:"Rímel abre o olhar! Melu e Ruby Rose têm máscaras baratinhas ótimas."},
+{c:"🧴 Skincare/Base",p:"O que o iluminador Glow faz?",o:["Dá brilho nas bochechas","Apaga a luz","Escurece tudo","Tira o brilho"],c_:0,d:"💡 Dica: glow = brilhar!",x:"Iluminador dá aquele brilho saudável no nariz e bochechas!"},
+{c:"🛍️ Lojas",p:"Na Sephora você pode…",o:["Testar perfumes e maquiagens","Comprar arroz e feijão","Cortar grama","Trocar pneu"],c_:0,d:"💡 Dica: é loja de beleza!",x:"Na Sephora dá pra testar tudo antes de comprar!"},
+{c:"✨ Gringa Luxo",p:"Qual produto a Rare Beauty lançou que viralizou?",o:["Blush líquido","Pneu","Cafeteira","Mochila"],c_:0,d:"💡 Dica: vai na bochecha!",x:"O blush líquido da Rare Beauty é super pigmentado, uma gotinha basta!"},
+{c:"🌸 Marca Brasileira",p:"Boca Rosa vende principalmente…",o:["Pó, base, batom e paletas","Ferramentas","Celulares","Brinquedos"],c_:0,d:"💡 Dica: tudo de make!",x:"Boca Rosa Beauty tem pó compacto famoso que viralizou na internet!"},
+{c:"💋 Boca & Olhos",p:"O que é gloss?",o:["Batom com brilho molhado","Um tipo de pedra","Um sorvete","Uma cola"],c_:0,d:"💡 Dica: deixa a boca brilhando!",x:"Gloss Melu e BT têm cheirinho de fruta e deixam a boca linda!"},
+{c:"🧴 Skincare/Base",p:"Antes da maquiagem devemos passar…",o:["Protetor solar e hidratante","Areia","Óleo de cozinha","Tinta de parede"],c_:0,d:"💡 Dica: protege do sol!",x:"Skincare antes da make faz tudo fixar melhor!"},
+{c:"✨ Gringa Luxo",p:"MAC é sigla de…",o:["Make-up Art Cosmetics","Massa, Arroz e Carne","Mega Alto Colorido","Moda Alta Costura"],c_:0,d:"💡 Dica: tem 'Cosmetics' no nome!",x:"MAC é marca profissional usada por maquiadores do mundo todo!"},
+{c:"🌸 Marca Brasileira",p:"Bruna Tavares também é conhecida como…",o:["Pausa Para Feminices","Pausa Para Futebol","Hora do Recreio","Blog do Cachorro"],c_:0,d:"💡 Dica: pausa para…",x:"O blog Pausa Para Feminices virou a marca BT!"},
+{c:"🌊 Océane",p:"Qual acessório a Océane vende para levar pincéis?",o:["Necessaire / porta-pincéis","Marmita","Mochila escolar","Caixa de ferramentas"],c_:0,d:"💡 Dica: parece bolsinha!",x:"As necessaires da Océane são fofas e cabem na mochila!"},
+{c:"🛍️ Lojas",p:"Quem Disse, Berenice? vende…",o:["Maquiagem colorida e divertida","Cimento e tijolo","Ração de gato","Peças de carro"],c_:0,d:"💡 Dica: tudo colorido!",x:"A loja tem batons de todas as cores, até azul e preto!"},
+{c:"💋 Boca & Olhos",p:"O delineador serve para…",o:["Fazer traço nos olhos (gatinho)","Desenhar na parede","Pintar unha","Escovar dente"],c_:0,d:"💡 Dica: olho de gatinho!",x:"Delineado gatinho é clássico! Boca Rosa e Quem Disse Berenice têm canetas ótimas."},
+{c:"🧴 Skincare/Base",p:"O pó compacto serve para…",o:["Tirar o brilho oleoso da pele","Fazer bolo","Lavar roupa","Temperar comida"],c_:0,d:"💡 Dica: deixa sequinho!",x:"Pó da Boca Rosa e da Mari Maria seguram a make o dia todo!"},
+{c:"✨ Gringa Luxo",p:"O perfume Miss Dior é da…",o:["Dior","Avon","Jequiti","Natura"],c_:0,d:"💡 Dica: Miss + …",x:"Miss Dior é um dos perfumes mais chiques do mundo!"},
+{c:"🌸 Marca Brasileira",p:"Melu é conhecida por ser…",o:["Baratinha e boa","Muito cara","Só para adultos","Uma comida"],c_:0,d:"💡 Dica: cabe no bolso!",x:"Melu custa pouco e é perfeita para quem está começando na make!"},
+{c:"💋 Boca & Olhos",p:"Paleta de sombras serve para…",o:["Pintar os olhos com várias cores","Pintar a casa","Colorir o caderno","Temperar salada"],c_:0,d:"💡 Dica: vai na pálpebra!",x:"Paletas da Niina Secrets e da Mari Maria têm cores lindas!"},
+{c:"🛍️ Lojas",p:"O Boticário (Make B.) é uma marca…",o:["Brasileira","Francesa","Japonesa","Italiana"],c_:0,d:"💡 Dica: verde e amarelo!",x:"O Boticário nasceu no Paraná e hoje tem lojas no Brasil todo!"},
+{c:"🌸 Marca Brasileira",p:"Mari Maria ficou famosa primeiro como…",o:["Youtuber / influenciadora de maquiagem","Jogadora de futebol","Cantora de ópera","Piloto de avião"],c_:0,d:"💡 Dica: vídeos na internet!",x:"Mari Maria ensinava make no YouTube e criou sua marca!"},
+{c:"🌸 Marca Brasileira",p:"Niina Secrets se chama na verdade…",o:["Niina Santina","Niina da Esquina","Nina Dobrev","Nina Williams"],c_:0,d:"💡 Dica: sobrenome italiano!",x:"Niina Santina mostra truques de maquiagem e viagens!"},
+{c:"✨ Gringa Luxo",p:"Onde a Dior vende no Brasil?",o:["Na Sephora e lojas de luxo","Na feira","No mercadão","Na papelaria"],c_:0,d:"💡 Dica: loja com S…",x:"Dior vende na Sephora dos shoppings chiques!"},
+{c:"💋 Boca & Olhos",p:"Batom matte é aquele que…",o:["É sequinho sem brilho","Brilha muito","É comestível","Muda de cor sozinho"],c_:0,d:"💡 Dica: sem brilho!",x:"BT Velvet e Boca Rosa têm mattes que duram horas!"},
+{c:"🧴 Skincare/Base",p:"Blush deve ser passado…",o:["Nas bochechas","No pé","Na testa do cachorro","No cotovelo"],c_:0,d:"💡 Dica: faz bochecha rosada!",x:"Blush Melu e Rare Beauty deixam com cara de saúde!"},
+{c:"🌊 Océane",p:"Demaquilante serve para…",o:["Tirar a maquiagem","Passar maquiagem","Comer","Lavar carro"],c_:0,d:"💡 Dica: de-maquiagem!",x:"Sempre tire a make antes de dormir com algodão Océane!"},
+{c:"🛍️ Lojas",p:"Na loja Quem Disse, Berenice? o atendimento é…",o:["Livre, você testa tudo sozinha","Só com hora marcada","Proibido testar","Só para adultos"],c_:0,d:"💡 Dica: pode fuçar à vontade!",x:"A ideia é se divertir testando cores sem vergonha!"}
+];
+
+// gera as 200 fases (reaproveita banco e varia enunciado para não repetir igual)
+function perguntaDaFase(n){
+  const base = BANCO[(n-1)%BANCO.length];
+  const volta = Math.floor((n-1)/BANCO.length);
+  let p = base.p;
+  if(volta>0) p = "(Nível "+(volta+1)+") "+p;
+  // embaralhar alternativas mantendo correta
+  const idxs = base.o.map((_,i)=>i);
+  // embaralhamento simples baseado na fase (determinístico + aleatório leve)
+  let ordem = [...idxs].sort(()=>Math.random()-0.5);
+  const novas = ordem.map(i=>base.o[i]);
+  const novaCorreta = ordem.indexOf(base.c_);
+  return {cat:base.c, p:p+"  (Fase "+n+")", o:novas, c:ordem.indexOf(base.c_), d:base.d, x:base.x};
+}
+
+// ============ ESTADO ============
+let faseAtual=1, pontos=0, timer=null, tempoRest=0, respondida=false;
+function chave(){return "quizMake_"+turma+"_"+dif+"_"+(nome||"jogador").toLowerCase();}
+function carregar(){try{const d=JSON.parse(localStorage.getItem(chave()))||{};faseAtual=d.fase||1;pontos=d.pontos||0;}catch(e){faseAtual=1;pontos=0;}}
+function salvar(){localStorage.setItem(chave(),JSON.stringify({fase:faseAtual,pontos:pontos}));}
+
+// ============ TELA INICIAL ============
+const turmaBtns=document.querySelectorAll(".turma-btn");
+const difBtns=document.querySelectorAll(".dif");
+turmaBtns.forEach(b=>b.onclick=()=>{turmaBtns.forEach(x=>x.classList.remove("selecionado"));b.classList.add("selecionado");turma=b.dataset.turma;check();});
+difBtns.forEach(b=>b.onclick=()=>{difBtns.forEach(x=>x.classList.remove("selecionado"));b.classList.add("selecionado");dif=b.dataset.dif;check();});
+function check(){
+  document.getElementById("nome").value=document.getElementById("nome").value;
+  const ok = turma && dif && document.getElementById("nome").value.trim().length>=2;
+  document.getElementById("btnComecar").disabled=!ok;
+  document.getElementById("resumo").textContent = (document.getElementById("nome").value.trim()||"Seu nome")+" • "+(turma||"?")+" • "+(dif?DIFS[dif].nome:"?");
+}
+document.getElementById("nome").oninput=check;
+document.getElementById("btnComecar").onclick=()=>{
+  nome=document.getElementById("nome").value.trim();
+  carregar();
+  mostrarMapa();
+  beep(600);
+};
+
+// ============ MAPA ============
+function mostrarMapa(){
+  document.getElementById("tela-inicio").classList.add("escondido");
+  document.getElementById("tela-jogo").classList.add("escondido");
+  document.getElementById("tela-final").classList.add("escondido");
+  document.getElementById("tela-mapa").classList.remove("escondido");
+  document.getElementById("jogadorInfo").textContent="👧 "+nome+" • "+turma+" • "+DIFS[dif].nome;
+  document.getElementById("pontosInfo").textContent="⭐ "+pontos+" pontos";
+  document.getElementById("faseInfo").textContent="🚩 fase "+faseAtual+"/200";
+  const mapa=document.getElementById("mapa");mapa.innerHTML="";
+  for(let i=1;i<=200;i++){
+    const q=BANCO[(i-1)%BANCO.length];
+    const b=document.createElement("button");
+    b.className="fase";
+    const emoji=q.c.split(" ")[0];
+    if(i<faseAtual){b.classList.add("feita");b.innerHTML=i+"<small>"+emoji+" ✓</small>";b.classList.add("livre");b.onclick=()=>abrirFase(i);}
+    else if(i===faseAtual){b.classList.add("atual");b.classList.add("livre");b.innerHTML=i+"<small>"+emoji+" ▶</small>";b.onclick=()=>abrirFase(i);}
+    else{b.classList.add("bloq");b.innerHTML=i+"<small>🔒</small>";}
+    mapa.appendChild(b);
+  }
+  // rola até fase atual
+  const el=mapa.children[faseAtual-1];if(el)el.scrollIntoView({block:"center"});
+}
+document.getElementById("btnTrocar").onclick=()=>{
+  document.getElementById("tela-mapa").classList.add("escondido");
+  document.getElementById("tela-inicio").classList.remove("escondido");
+};
+document.getElementById("btnZerar").onclick=()=>{
+  if(confirm("Recomeçar da fase 1 e zerar pontos?")){faseAtual=1;pontos=0;salvar();mostrarMapa();}
+};
+document.getElementById("btnMapa").onclick=()=>mostrarMapa();
+
+// ============ JOGO ============
+function abrirFase(n){
+  faseAtual=n;respondida=false;
+  document.getElementById("tela-mapa").classList.add("escondido");
+  document.getElementById("tela-final").classList.add("escondido");
+  document.getElementById("tela-jogo").classList.remove("escondido");
+  const q=perguntaDaFase(n);
+  window.qAtual=q;
+  document.getElementById("faseTitulo").textContent="💄 Fase "+n+" de 200 — "+DIFS[dif].nome;
+  document.getElementById("catTitulo").textContent=q.cat;
+  document.getElementById("pergunta").textContent=q.p;
+  const cfg=DIFS[dif];
+  document.getElementById("dica").style.display=cfg.dica?"block":"none";
+  document.getElementById("dica").textContent=cfg.dica?q.d:"🔥 No HARD não tem dica! Boa sorte!";
+  document.getElementById("curio").classList.add("escondido");
+  document.getElementById("btnProx").classList.add("escondido");
+  const box=document.getElementById("alternativas");box.innerHTML="";
+  q.o.forEach((txt,i)=>{
+    const btn=document.createElement("button");
+    btn.className="alt";btn.textContent=["A) ","B) ","C) ","D) "][i]+txt;
+    btn.onclick=()=>responder(i,btn);
+    box.appendChild(btn);
+  });
+  // timer
+  clearInterval(timer);
+  tempoRest=cfg.tempo;
+  atualizarTimer();
+  timer=setInterval(()=>{
+    tempoRest-=0.2;atualizarTimer();
+    if(tempoRest<=0){clearInterval(timer);tempoEsgotado();}
+  },200);
+}
+function atualizarTimer(){
+  const cfg=DIFS[dif];
+  const pct=Math.max(0,tempoRest/cfg.tempo*100);
+  document.getElementById("timerBar").style.width=pct+"%";
+  document.getElementById("tempoTxt").textContent="⏰ "+Math.ceil(tempoRest)+"s restantes";
+}
+function responder(i,btn){
+  if(respondida)return;respondida=true;clearInterval(timer);
+  const q=window.qAtual;
+  const botoes=document.querySelectorAll(".alt");
+  botoes.forEach((b,j)=>{b.disabled=true;if(j===q.c)b.classList.add("certa");});
+  const curio=document.getElementById("curio");
+  curio.classList.remove("escondido");
+  if(i===q.c){
+    btn.classList.add("certa");
+    const ganho=10*DIFS[dif].multi;
+    pontos+=ganho;
+    curio.innerHTML="✅ <b>Acertou! +"+ganho+" pontos</b><br>✨ "+q.x;
+    beep(880);setTimeout(()=>beep(1100),150);
+    if(faseAtual<200){faseAtual++; }
+    salvar();
+    const bp=document.getElementById("btnProx");
+    bp.classList.remove("escondido");
+    bp.textContent = faseAtual>200||window.faseVencida?"Ver resultado 🏆":"Próxima fase ➜";
+    if(faseAtual>200){faseAtual=200;window.faseVencida=true;bp.textContent="Ver resultado 🏆";}
+  }else{
+    btn.classList.add("errada");
+    curio.innerHTML="❌ <b>Ops! Tente de novo.</b><br>✨ "+q.x+"<br><button class='btn btn-sec' style='margin-top:.5rem' onclick='abrirFase(faseAtual)'>🔁 tentar esta fase de novo</button>";
+    beep(200);
+  }
+}
+function tempoEsgotado(){
+  if(respondida)return;respondida=true;
+  const q=window.qAtual;
+  document.querySelectorAll(".alt").forEach((b,j)=>{b.disabled=true;if(j===q.c)b.classList.add("certa");});
+  const curio=document.getElementById("curio");
+  curio.classList.remove("escondido");
+  curio.innerHTML="⏰ <b>Tempo esgotado!</b><br>✨ "+q.x+"<br><button class='btn btn-sec' style='margin-top:.5rem' onclick='abrirFase(faseAtual)'>🔁 tentar de novo</button>";
+  beep(200);
+}
+document.getElementById("btnProx").onclick=()=>{
+  if(window.faseVencida || faseAtual>=200 && respondida){
+    // checa se passou da 200
+    mostrarFinal();
+  } else mostrarMapa(),abrirFase(faseAtual);
+  beep(600);
+};
+function mostrarFinal(){
+  document.getElementById("tela-jogo").classList.add("escondido");
+  document.getElementById("tela-final").classList.remove("escondido");
+  document.getElementById("finalTxt").textContent="Uhuul "+nome+" do "+turma+"! Você chegou até a fase 200 no modo "+DIFS[dif].nome+"! Você é uma expert em maquiagem! 💄👑";
+  document.getElementById("finalPontos").textContent="⭐ Total: "+pontos+" pontos";
+  salvar();
+}
+document.getElementById("btnJogarDeNovo").onclick=()=>{faseAtual=1;pontos=0;window.faseVencida=false;salvar();mostrarMapa();abrirFase(1);};
+document.getElementById("btnVerMapa").onclick=()=>mostrarMapa();
+
+// som simples
+function beep(freq){try{const ctx=new (window.AudioContext||window.webkitAudioContext)();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=freq;o.type="sine";g.gain.value=0.15;o.start();o.stop(ctx.currentTime+0.25);}catch(e){}}
+</script>
 </body>
 </html>
